@@ -1,74 +1,23 @@
-import { Avatar, BackgroundImage, Flex, Group, Image, Stack, Text } from "@mantine/core";
+import { Avatar, BackgroundImage, Flex, Group, Image, Stack, Text, Tooltip } from "@mantine/core";
 import Default from "../../components/templates/Default/Default";
-import {
-  Pbb,
-  Listrik,
-  Pulsa,
-  Pdam,
-  Pgn,
-  Televisi,
-  Musik,
-  Game,
-  VoucherMakanan,
-  Kurban,
-  Zakat,
-  PaketData,
-} from "../../assets/images";
-import { BackgroundSaldo, Banner1, Banner2, Banner3, Banner4, Banner5 } from "../../assets/banners";
+import { BackgroundSaldo } from "../../assets/banners";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { bannerState, useGetBanners } from "../../redux/features/bannerSlice/banner.slice";
+import { servicesState, useGetServices } from "../../redux/features/servicesSlice/services.slice";
+import { withAuth } from "../../components/atoms/auth/AuthProvider";
 
 const Home = () => {
-  const listIcon = [
-    {
-      name: "PBB",
-      image: Pbb,
-    },
-    {
-      name: "Listrik",
-      image: Listrik,
-    },
-    {
-      name: "Pulsa",
-      image: Pulsa,
-    },
-    {
-      name: "Pdam",
-      image: Pdam,
-    },
-    {
-      name: "Pgn",
-      image: Pgn,
-    },
-    {
-      name: "Televisi",
-      image: Televisi,
-    },
-    {
-      name: "Musik",
-      image: Musik,
-    },
-    {
-      name: "Game",
-      image: Game,
-    },
-    {
-      name: "VoucherMakanan",
-      image: VoucherMakanan,
-    },
-    {
-      name: "Kurban",
-      image: Kurban,
-    },
-    {
-      name: "Zakat",
-      image: Zakat,
-    },
-    {
-      name: "PaketData",
-      image: PaketData,
-    },
-  ];
+  const dispatch: any = useDispatch();
+  const bannersData: bannerState = useSelector((state: any) => state.banner);
+  const servicesData: servicesState = useSelector((state: any) => state.services);
 
-  const listBanner = [Banner1, Banner2, Banner3, Banner4, Banner5];
+  console.log({ bannersData, servicesData });
+
+  useEffect(() => {
+    dispatch(useGetBanners());
+    dispatch(useGetServices());
+  }, [dispatch]);
 
   return (
     <Default>
@@ -85,19 +34,29 @@ const Home = () => {
             <Text>Lihat Saldo</Text>
           </BackgroundImage>
         </Flex>
-        <Group grow>
-          {listIcon.map((icon, index) => (
-            <Stack key={index} align="center" spacing={4}>
-              <Image src={icon.image} width={60} />
-              <Text>{icon.name}</Text>
+        <Group grow align="start">
+          {servicesData?.data?.map((service, index) => (
+            <Stack
+              className="max-w-[100px] h-[80px] overflow-hidden"
+              key={index}
+              align="center"
+              justify="start"
+              spacing={4}
+            >
+              <Image src={service.service_icon} width={60} />
+              <Text fz={12} align="center">
+                {service.service_name}
+              </Text>
             </Stack>
           ))}
         </Group>
         <Stack>
           <Text>Temukan promo menarik</Text>
           <Group>
-            {listBanner.map(banner => (
-              <Image src={banner} width={300} />
+            {bannersData?.data?.map((banner, index) => (
+              <Tooltip key={index} label={banner.description} position="bottom">
+                <Image src={banner.banner_image} alt={banner.banner_name} width={300} />
+              </Tooltip>
             ))}
           </Group>
         </Stack>
@@ -106,4 +65,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default withAuth(Home);

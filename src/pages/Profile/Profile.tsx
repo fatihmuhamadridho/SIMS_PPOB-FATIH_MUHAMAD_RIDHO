@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import Default from "../../components/templates/Default/Default";
 import { Avatar, Button, Container, Stack, Text, TextInput } from "@mantine/core";
+import { useAuth } from "../../components/atoms/auth/AuthContext";
 
 const Profile = () => {
   const navigate = useNavigate();
+  const { onLogout } = useAuth();
 
   const handleLogout = async () => {
+    onLogout();
     navigate("/login");
   };
 

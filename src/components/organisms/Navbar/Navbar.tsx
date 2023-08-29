@@ -13,7 +13,7 @@ const Navbar = () => {
               <Text>SIMS PPOB</Text>
             </Group>
           </Link>
-          <Group>
+          <Group spacing={24}>
             <Link to={"/"}>
               <Text>Beranda</Text>
             </Link>
